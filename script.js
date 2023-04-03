@@ -1,5 +1,6 @@
 
-// Functions
+
+
 function loadJSONP(url, callback) {
     const script = document.createElement('script');
     script.src = url;
@@ -14,13 +15,6 @@ function calculateScore(distance) {
     var score = Math.round(tmp_score);
     return score;
 }
-
-function reset_timer_animation() {
-    var el = document.getElementById('timer-container');
-    el.style.animation = 'none';
-    el.offsetHeight; /* trigger reflow */
-    el.style.animation = null; 
-  }
 
 function displayScore(score) {
     document.getElementById('score-table').innerHTML = score; 
@@ -52,6 +46,11 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
   // Map
   
   loadJSONP('locations.js', function() {
+
+    const timer = document.getElementById("timer");
+    let isPaused = false;
+    //startCountdown(10);
+
   
     var maximumlevel = locations.length;
     var level = 0;
@@ -79,19 +78,45 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
   
     var distanceLine = null;
 
-    const animated = document.getElementById("timer-container");
+  // Set the duration of the countdown in seconds
+  const duration = 10;
 
-    //Add animation event listener, with attached function.
-    animated.addEventListener('animationend', () => {
-        console.log('Animation ended');
-        alert('Animation ended');
-    });
+  // Get the countdown element
+  const countdown = document.getElementById('countdown');
+
+  // Create the animation
+  const animation = countdown.animate([
+    { width: '100%' },
+    { width: '0%' }
+  ], {
+    duration: duration * 1000,
+    easing: 'linear',
+    fill: 'forwards'
+  });
+
+  // Set the initial color of the countdown
+  countdown.style.backgroundColor = '#f00';
+
+  // Set up a function to update the color of the countdown
+  function updateColor(time) {
+    const percent = time / duration * 100;
+    countdown.style.backgroundColor = `hsl(${percent}, 100%, 50%)`;
+  }
+
+  // Add an event listener to the animation to update the color of the countdown
+  animation.addEventListener('update', () => {
+    updateColor(animation.currentTime / 1000);
+  });
+
+
+
   
   
     // Buttons
-  
     var calculateButton = document.getElementById('calculate-distance');
     calculateButton.addEventListener('click', function() {
+
+      animation.pause();
 
       targetMarker.addTo(mymap);
 
@@ -124,17 +149,15 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
         displayCounter(counter)
       }
 
-      
-
-      setTimeout(function(){
-        nextTarget(mymap, level, targetMarker, distanceLine);
-      
-        distanceLine.removeFrom(mymap);
-        
-        reset_timer_animation();
-    }, 2000);
-
     });
+
+    var nextButton = document.getElementById('Next Target');
+    nextButton.addEventListener('click', function() {
+      nextTarget(mymap, level, targetMarker, distanceLine);
+      distanceLine.removeFrom(mymap);
+      animation.cancel();
+      animation.play();
+        });
   
   
     // Markers

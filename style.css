@@ -5,12 +5,37 @@
     font-family: Arial, sans-serif;
   }
   
-  .container {
-    max-width: 800px;
-    margin: 0 auto;
+  .card {
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     padding: 20px;
-    position: relative;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 500px;
+    margin: 0 auto;
   }
+  
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .card-header {
+    font-size: 24px;
+  }
+  
+  .card-score {
+    font-size: 36px;
+    font-weight: bold;
+  }
+  
+  
   
   .header {
     font-size: 36px;
@@ -58,9 +83,13 @@
     text-align: center;
   }
   
+  /* Place mapid in center of screen*/
   #mapid {
     height: 500px;
+    width: 1000px;
     margin: 100 auto 20px;
+
+
   }
 
   
@@ -78,36 +107,40 @@
     margin: 20px auto;
   }
 
-  #timer-container{bottom:15%;
-    position:relative;
-    z-index: 1;
+  #countdown {
+    width: 100%;
+    height: 50px;
+    background-color: #f00;
+  }
 
-    }     
-    @-webkit-keyframes run {
-        0% { left: 0;}
-        100%{ left : 100%;}
-    }
-    @-webkit-keyframes countdown {
-        from {
+  #timer-container {
+    width: 1000px;
+    height: 50px;
+    background-color: #ccc;
+    position: relative;
+  }
+  
+  #timer {
+    width: 100%;
+    height: 100%;
+    background-color: #4CAF50;
+    position: absolute;
+    left: 0;
+    top: 0;
+    animation: countdown 10s linear forwards;
+  }
+  
+
+  @-webkit-keyframes countdown {
+      from {
           width: 100%;
-          background-color: #f2f2f2;
-        }
-        to {
+          background-color: #19e162;
+      }
+      to {
           width: 0%;
           background-color: #ff0000;
-        }
       }
+    }
 
-    .circle{
-        -webkit-animation:linear;
-        -webkit-animation-name: countdown;
-        -webkit-animation-duration: 10s;
-        }
-    .paused{
-            -webkit-animation-play-state:paused;
-            -moz-animation-play-state:paused;
-            -o-animation-play-state:paused; 
-            animation-play-state:paused;
-        }
   
   
