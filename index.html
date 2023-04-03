@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adding one marker</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+
+    <div class="container">
+      <h1 class="header">Level: <span id="level-header"></span></h1>
+      <h1 class="header">Counter: <span id="counter"></span>/5</h1>
+    <div id = "timer-container_marker">
+        <h1 class="header">Target: <span id="marker-location"></span></h1>
+        </div>
+    <div id = "timer-container">
+            <h1 class="header"> &nbsp <span> </span></h1>
+            </div>
+    
+      <div id="mapid"></div>
+      <div class="buttons">
+        <button class="button" id="calculate-distance">Calculate Distance</button>
+      </div>
+      <h1 class="score">Score: <span id="score-table"></span></h1>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
