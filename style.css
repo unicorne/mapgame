@@ -27,18 +27,18 @@
   }
   
   .card-header {
-    font-size: 24px;
+    font-size: 16px;
   }
   
   .card-score {
-    font-size: 24px;
+    font-size: 16px;
     font-weight: bold;
   }
   
   
   
   .header {
-    font-size: 36px;
+    font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
     color: #333;
@@ -86,8 +86,7 @@
   /* Place mapid in center of screen*/
   #mapid {
     height: 500px;
-    width: 1000px;
-    margin: 100 auto 20px;
+  
 
 
   }
@@ -112,9 +111,6 @@
     height: 50px;
     background-color: #f00;
   }
-
-
-  
 
 
   
