@@ -47,9 +47,6 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
   
   loadJSONP('locations.js', function() {
 
-    const timer = document.getElementById("timer");
-    let isPaused = false;
-    //startCountdown(10);
 
   
     var maximumlevel = locations.length;
@@ -77,6 +74,8 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
     }).addTo(mymap);
   
     var distanceLine = null;
+
+    nextTarget(mymap, level, targetMarker, distanceLine);
 
   // Set the duration of the countdown in seconds
   const duration = 10;
