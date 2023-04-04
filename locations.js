@@ -3,7 +3,7 @@
 const locations = [
     {level: 1,
     counter_max: 5,
-    score_needed: 100,
+    score_needed: 50,
     cities: [
     { city: "Tokyo", country: "Japan", lat: 35.6762, lng: 139.6503 },
     { city: "New York", country: "USA", lat: 40.7128, lng: -74.0060 },

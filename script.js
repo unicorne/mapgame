@@ -44,6 +44,28 @@ loadJSONP('locations.js', function() {
     }
   }
 
+  function showStartModal() {
+    var modal = document.getElementById("startModal");
+    modal.style.display = "block";
+    
+    var modalButton = document.getElementById("StartGame");
+    
+
+    modalButton.addEventListener("click", closeStartModal); // add event listener to close modal
+    //modalButton.addEventListener("click", nextTargetComplete); // add event listener to close modal
+
+    
+    var closeBtn = document.getElementsByClassName("close")[0];
+    closeBtn.onclick = function() {
+      modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+  }
+
   function pauseAnimation(){
     // check if animation is paused
     if (animation._paused) {
@@ -53,9 +75,20 @@ loadJSONP('locations.js', function() {
     }
   }
 
+  function startAnimation() {
+    animation.cancel();
+    animation.play();
+  }
+
   function closeModal() {
     var modal = document.getElementById("myModal");
     modal.style.display = "none";
+  }
+
+  function closeStartModal() {
+    var modal = document.getElementById("startModal");
+    modal.style.display = "none";
+    startAnimation() 
   }
 
     
@@ -93,9 +126,11 @@ loadJSONP('locations.js', function() {
   function displayCounter(){
     //var timeleft = 10 - animation.currentTime / 1000
     //document.getElementById('timeleft-display').innerHTML = timeleft
-    var max_c = locations[level].counter_max;
-    var counter_show = counter +1;
-    document.getElementById('counter-display').innerHTML = counter_show + '/' + max_c;
+    if (level){
+      var max_c = locations[level].counter_max;
+      var counter_show = counter +1;
+      document.getElementById('counter-display').innerHTML = counter_show + '/' + max_c;
+    }
   };
 
   function nextTarget(){
@@ -188,12 +223,17 @@ loadJSONP('locations.js', function() {
   };
 
 
+  
+
+
   // ###############################################
   // #                                             #
   // #                Functions                    #
   // #                                             #
   // ###############################################
 
+  showStartModal();
+  
   var maximumlevel = 3;
   var level = 0;
   var score = 0;
@@ -201,6 +241,7 @@ loadJSONP('locations.js', function() {
   var scoreNeeded = locations[level].score_needed;
   var levelScore = 0;
   var lastTimeRemaining = 0;
+  
   displayLevel(level)
   displayScore(score, levelScore) 
   displayCounter(counter)
@@ -213,6 +254,8 @@ loadJSONP('locations.js', function() {
     id: 'mapbox.streets'
   }).addTo(mymap);
 
+
+  
   var targetMarker = L.marker([45.5231, -122.6765])
 
   var draggableMarker = L.marker([0, 0], {
@@ -306,6 +349,7 @@ loadJSONP('locations.js', function() {
     console.log(locations);
     // get random number between 0 and lenght of locations array
 
+    
   });
   
   
