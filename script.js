@@ -4,6 +4,7 @@ function showModal(distance) {
   var distanceValue = document.getElementById("distance-value");
   distanceValue.innerHTML = "Distance: " + distance + " meters";
   modal.style.display = "block";
+
   var closeBtn = document.getElementsByClassName("close")[0];
   closeBtn.onclick = function() {
     modal.style.display = "none";
@@ -13,6 +14,11 @@ function showModal(distance) {
       modal.style.display = "none";
     }
   }
+}
+
+function closeModal() {
+  var modal = document.getElementById("myModal");
+  modal.style.display = "none";
 }
 
 
@@ -170,6 +176,7 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
     });
 
     var nextButton = document.getElementById('Next Target');
+    nextButton.addEventListener("click", closeModal);
     nextButton.addEventListener('click', function() {
       nextTarget(mymap, level, targetMarker, distanceLine);
       distanceLine.removeFrom(mymap);
@@ -179,10 +186,13 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
   
   
     // Markers
+
+    mymap.on('click', function(e) {
+      draggableMarker.setLatLng(e.latlng);
+    });
   
     draggableMarker.on('drag', function(event) {
       var marker = event.target;
-      var position = marker.getLatLng();
       if (distanceLine) {
         distanceLine.removeFrom(mymap);
       }
