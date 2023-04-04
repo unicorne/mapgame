@@ -13,11 +13,14 @@ loadJSONP('locations.js', function() {
 // #                Functions                    #
 // #                                             #
 // ###############################################
-
   function showModal(distance) {
     var modal = document.getElementById("myModal");
     var distanceValue = document.getElementById("distance-value");
+    var scoreValue = document.getElementById("score-value");
+    var timeValue = document.getElementById("time-value");
     distanceValue.innerHTML = "Distance: " + distance + " meters";
+    scoreValue.innerHTML = "Score: " + calculateScore(distance);
+    timeValue.innerHTML = "Time: " + lastTimeRemaining;
     modal.style.display = "block";
     
     var modalButton = document.getElementById("Next Target Modal");
@@ -60,28 +63,40 @@ loadJSONP('locations.js', function() {
       var maxDistance = 12000000;
       var tmp_score = maxDistance/distance;
       var score = Math.round(tmp_score);
+      updateTimeRemaining();
       return score;
   }
 
   function displayScore(score, levelScore) {
-      document.getElementById('score-table').innerHTML = score; 
+      //document.getElementById('score-table').innerHTML = score; 
       document.getElementById('score-display').innerHTML = score;
       document.getElementById('levelScore').innerHTML = levelScore; 
   }
 
   function displayLevel(level) {
-      document.getElementById('level-header').innerHTML = (level + 1).toString(); 
+      //document.getElementById('level-header').innerHTML = (level + 1).toString(); 
       document.getElementById('level-display').innerHTML = (level + 1).toString();
       document.getElementById('scoreNeeded').innerHTML = scoreNeeded; 
   }
 
-  function displayCounter(counter) {
+  function displayCounter2(counter) {
       document.getElementById('counter').innerHTML = counter; 
   }
 
-  function displayMarkerLocation(level, randomNumber){
-      document.getElementById('marker-location').innerHTML = locations[level].cities[randomNumber].city;
+  function displayMarkerLocation(level, randomNumber, counter){
+      //document.getElementById('marker-location').innerHTML = locations[level].cities[randomNumber].city;
+      document.getElementById('target-display').innerHTML = locations[level].cities[randomNumber].city;
+      displayCounter();
+
   }
+
+  function displayCounter(){
+    //var timeleft = 10 - animation.currentTime / 1000
+    //document.getElementById('timeleft-display').innerHTML = timeleft
+    var max_c = locations[level].counter_max;
+    var counter_show = counter +1;
+    document.getElementById('counter-display').innerHTML = counter_show + '/' + max_c;
+  };
 
   function nextTarget(){
       // remove Target MArker from map
@@ -150,21 +165,25 @@ loadJSONP('locations.js', function() {
 
   function updateGameState(distance){
     score += calculateScore(distance);
+    levelScore += calculateScore(distance);
     displayScore(score, levelScore) 
 
     counter += 1;
     displayCounter(counter)
     
 
-    if (level == maximumlevel) {
+    if (level == maximumlevel - 1) {
       alert('You have reached the maximum level. Your score is ' + score);
     }
 
     if (counter == 5) {
       level += 1;
+      scoreNeeded = locations[level].score_needed;
       displayLevel(level)
       counter = 0;
+      levelScore = 0;
       displayCounter(counter)
+      displayScore(score, levelScore) 
     }
   };
 
@@ -175,12 +194,13 @@ loadJSONP('locations.js', function() {
   // #                                             #
   // ###############################################
 
-  var maximumlevel = locations.length;
+  var maximumlevel = 3;
   var level = 0;
   var score = 0;
   var counter = 0;
-  var scoreNeeded = 5;
-  var levelScore = 10;
+  var scoreNeeded = locations[level].score_needed;
+  var levelScore = 0;
+  var lastTimeRemaining = 0;
   displayLevel(level)
   displayScore(score, levelScore) 
   displayCounter(counter)
@@ -202,8 +222,6 @@ loadJSONP('locations.js', function() {
 
   var distanceLine = null;
 
-  nextTarget(mymap, level, targetMarker, distanceLine);
-
   // Set the duration of the countdown in seconds
   const duration = 10;
 
@@ -220,14 +238,24 @@ loadJSONP('locations.js', function() {
     fill: 'forwards'
   });
 
+  nextTarget(mymap, level, targetMarker, distanceLine);
+
   // Set the initial color of the countdown
   countdown.style.backgroundColor = '#f00';
 
   // Set up a function to update the color of the countdown
   function updateColor(time) {
     const percent = time / duration * 100;
+    console.log(percent)
     countdown.style.backgroundColor = `hsl(${percent}, 100%, 50%)`;
+  
   }
+
+  function updateTimeRemaining() {
+    const remaining =  ((10000 - animation.currentTime)/1000).toFixed(2);
+    lastTimeRemaining = remaining;
+  }
+
 
   // Add an event listener to the animation to update the color of the countdown
   animation.addEventListener('update', () => {
@@ -253,11 +281,11 @@ loadJSONP('locations.js', function() {
 
     });
 
-    var nextButton = document.getElementById('Next Target');
-    nextButton.addEventListener("click", closeModal);
-    nextButton.addEventListener('click', function() {
-      nextTargetComplete(mymap, level, targetMarker, distanceLine, animation);
-        });
+    //var nextButton = document.getElementById('Next Target');
+    //nextButton.addEventListener("click", closeModal);
+    //nextButton.addEventListener('click', function() {
+      //nextTargetComplete(mymap, level, targetMarker, distanceLine, animation);
+        //});
 
   
     // Markers

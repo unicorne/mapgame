@@ -13,7 +13,7 @@
 
   <body>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; background-color: #f5f5f5; padding: 20px; border-radius: 10px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; background-color: #f5f5f5; padding: 5px; border-radius: 5px;">
         <h2 style="flex-basis: 50%; margin: 0; color: #333; text-align: center;">Traveller IQ remake</h2>
         <div style="display: flex; color: white; background-color: #333; padding: 10px; border-radius: 10px;">
             <div style="display: flex; flex-direction: column; align-items: center; border-right: 1px solid #555; padding-right: 10px; margin-right: 10px;">
@@ -34,6 +34,22 @@
             </div>
         </div>
     </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; background-color: #f5f5f5; padding: 20px; border-radius: 10px;">
+        <div style="display: flex; flex-basis: 33%; justify-content: center; align-items: center;">
+          <span style="text-align: center; font-size: 36px; margin-right: 10px;"> </span>
+          <span id="timeleft-display" style="text-align: center; font-size: 24px;"></span>
+        </div>
+        <div style="display: flex; flex-basis: 33%; justify-content: center; align-items: center;">
+          <span style="text-align: center; font-size: 24px;"></span>
+          <span id="target-display" style="text-align: center; font-size: 24px;"></span>
+        </div>
+        <div style="display: flex; flex-basis: 33%; justify-content: center; align-items: center;">
+          <span style="text-align: center; font-size: 24px; margin-left: 12px;">Counter: </span>
+          <span id="counter-display" style="text-align: center; font-size: 24px;"></span>
+        </div>
+      </div>
+      
     
       
       
@@ -42,23 +58,26 @@
       
       
 
-    <div class="card">
+    <!--<div class="card">
         <div class="wrapper">
           <h1 class="card-header">Level: <span id="level-header"></span></h1>
           <h1 class="card-header">Score: <span id="score-table"></span></h1>
         </div>
         <h1 class="card-score">Counter: <span id="counter"></span></h1>
-      </div>
+      </div>-->
       
     <div id="countdown-header">
-        <h1 class="header">Target: <span id="marker-location"></span></h1>
-    <div id="countdown">
-    </div>
+        <!--<h1 class="header">Target: <span id="marker-location"></span></h1>-->
+    <div id="countdown-container">
+        <div id="countdown"></div>
+        </div>
     </div>
     <div id="myModal" class="modal">
         <div class="modal-content">
           <span class="close">&times;</span>
-          <p id="distance-value"></p>
+          <h2 id="distance-value"></h2>
+          <h2 id="score-value"></h2>
+          <h2 id="time-value"></h2>
           <button class="button" id="Next Target Modal">Next</button>
           <button class="button" id="Pause">Pause</button>
         </div>
@@ -68,7 +87,7 @@
     <div id="mapid"></div>
     <div class="buttons">
     <button class="button" id="calculate-distance">Calculate Distance</button>
-    <button class="button" id="Next Target">Next</button>
+    <!--<button class="button" id="Next Target">Next</button>-->
     </div>
       
     <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"></script>

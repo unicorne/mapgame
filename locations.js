@@ -2,6 +2,8 @@
 
 const locations = [
     {level: 1,
+    counter_max: 5,
+    score_needed: 100,
     cities: [
     { city: "Tokyo", country: "Japan", lat: 35.6762, lng: 139.6503 },
     { city: "New York", country: "USA", lat: 40.7128, lng: -74.0060 },
@@ -15,6 +17,8 @@ const locations = [
     { city: "Rio de Janeiro", country: "Brazil", lat: -22.9068, lng: -43.1729 }
     ]},
     {level: 2,
+    counter_max: 5,
+    score_needed: 100,
     cities: [
     { city: "London", country: "UK", lat: 51.5074, lng: -0.1278 },
     { city: "Paris", country: "France", lat: 48.8566, lng: 2.3522 },
