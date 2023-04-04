@@ -55,12 +55,6 @@ loadJSONP('locations.js', function() {
     modal.style.display = "none";
   }
 
-
-  function closeModal() {
-    var modal = document.getElementById("myModal");
-    modal.style.display = "none";
-  }
-
     
   function calculateScore(distance) {
       var maxDistance = 12000000;
@@ -69,12 +63,16 @@ loadJSONP('locations.js', function() {
       return score;
   }
 
-  function displayScore(score) {
+  function displayScore(score, levelScore) {
       document.getElementById('score-table').innerHTML = score; 
+      document.getElementById('score-display').innerHTML = score;
+      document.getElementById('levelScore').innerHTML = levelScore; 
   }
 
   function displayLevel(level) {
       document.getElementById('level-header').innerHTML = (level + 1).toString(); 
+      document.getElementById('level-display').innerHTML = (level + 1).toString();
+      document.getElementById('scoreNeeded').innerHTML = scoreNeeded; 
   }
 
   function displayCounter(counter) {
@@ -152,7 +150,7 @@ loadJSONP('locations.js', function() {
 
   function updateGameState(distance){
     score += calculateScore(distance);
-    displayScore(score)
+    displayScore(score, levelScore) 
 
     counter += 1;
     displayCounter(counter)
@@ -181,8 +179,10 @@ loadJSONP('locations.js', function() {
   var level = 0;
   var score = 0;
   var counter = 0;
+  var scoreNeeded = 5;
+  var levelScore = 10;
   displayLevel(level)
-  displayScore(score)
+  displayScore(score, levelScore) 
   displayCounter(counter)
 
   var mymap = L.map('mapid').setView([0, 0], 2);
@@ -234,9 +234,9 @@ loadJSONP('locations.js', function() {
     updateColor(animation.currentTime / 1000);
   });
 
-  animation.addEventListener('finish', () => {
-    completeGuess();
-  });
+  //animation.addEventListener('finish', () => {
+    //completeGuess();
+  //});
 
 
 
