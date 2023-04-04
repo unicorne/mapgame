@@ -26,6 +26,9 @@ loadJSONP('locations.js', function() {
     modalButton.addEventListener("click", closeModal); // add event listener to close modal
     modalButton.addEventListener("click", nextTargetComplete); // add event listener to close modal
 
+    var pauseButton = document.getElementById("Pause");
+    pauseButton.addEventListener("click", pauseAnimation); // add event listener to close modal
+
     
     var closeBtn = document.getElementsByClassName("close")[0];
     closeBtn.onclick = function() {
@@ -35,6 +38,15 @@ loadJSONP('locations.js', function() {
       if (event.target == modal) {
         modal.style.display = "none";
       }
+    }
+  }
+
+  function pauseAnimation(){
+    // check if animation is paused
+    if (animation._paused) {
+      animation.play();
+    } else {
+      animation.pause();
     }
   }
 
@@ -249,7 +261,6 @@ loadJSONP('locations.js', function() {
 
   
     // Markers
-
     mymap.on('click', function(e) {
       draggableMarker.setLatLng(e.latlng);
     });
