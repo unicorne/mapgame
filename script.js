@@ -126,11 +126,10 @@ loadJSONP('locations.js', function() {
   function displayCounter(){
     //var timeleft = 10 - animation.currentTime / 1000
     //document.getElementById('timeleft-display').innerHTML = timeleft
-    if (level){
-      var max_c = locations[level].counter_max;
-      var counter_show = counter +1;
-      document.getElementById('counter-display').innerHTML = counter_show + '/' + max_c;
-    }
+    var max_c = locations[level].counter_max;
+    var counter_show = counter +1;
+    document.getElementById('counter-display').innerHTML = counter_show + '/' + max_c;
+
   };
 
   function nextTarget(){
@@ -211,14 +210,24 @@ loadJSONP('locations.js', function() {
       alert('You have reached the maximum level. Your score is ' + score);
     }
 
-    if (counter == 5) {
-      level += 1;
-      scoreNeeded = locations[level].score_needed;
-      displayLevel(level)
-      counter = 0;
-      levelScore = 0;
-      displayCounter(counter)
-      displayScore(score, levelScore) 
+    counter_max = locations[level].counter_max;
+    console.log('Counter max' + counter_max);
+    console.log('scoreNeeded' + scoreNeeded);
+    console.log('levelScore' + levelScore);
+    if (counter == counter_max) {
+      if (scoreNeeded <= levelScore) {
+        level += 1;
+        scoreNeeded = locations[level].score_needed;
+        displayLevel(level)
+        counter = 0;
+        levelScore = 0;
+        displayCounter(counter)
+        displayScore(score, levelScore) 
+      }else {
+        console.log('Game Over');
+        alert('Game Over');
+        console.log('Game Over');
+      }
     }
   };
 
