@@ -86,9 +86,8 @@
   /* Place mapid in center of screen*/
   #mapid {
     height: 500px;
+    z-index: 1;
   
-
-
   }
 
   
@@ -116,7 +115,7 @@
   .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 3;
     left: 0;
     top: 0;
     width: 100%;
@@ -131,6 +130,7 @@
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
+    z-index: 3;
   }
   
   .close {

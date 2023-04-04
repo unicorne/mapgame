@@ -147,8 +147,8 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
       distanceLine.addTo(mymap);
       //alert('The distance between the markers is ' + distance + ' meters.');
       //makePopup(distance);
-      window.confirm('The distance between the markers is ' + distance + ' meters. \n Click OK to continue.');
-      //showModal(distance);
+      //window.confirm('The distance between the markers is ' + distance + ' meters. \n Click OK to continue.');
+      showModal(distance);
   
       score += calculateScore(distance);
       displayScore(score)
