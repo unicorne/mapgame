@@ -1,10 +1,17 @@
 
-function showModal(distance) {
+function showModal(distance, mymap, level, targetMarker, distanceLine, animation) {
   var modal = document.getElementById("myModal");
   var distanceValue = document.getElementById("distance-value");
   distanceValue.innerHTML = "Distance: " + distance + " meters";
   modal.style.display = "block";
+  
+  var modalButton = document.getElementById("Next Target Modal");
+  
 
+  modalButton.addEventListener("click", closeModal); // add event listener to close modal
+  modalButton.addEventListener("click", nextTargetComplete); // add event listener to close modal
+
+  
   var closeBtn = document.getElementsByClassName("close")[0];
   closeBtn.onclick = function() {
     modal.style.display = "none";
@@ -15,6 +22,12 @@ function showModal(distance) {
     }
   }
 }
+
+function closeModal() {
+  var modal = document.getElementById("myModal");
+  modal.style.display = "none";
+}
+
 
 function closeModal() {
   var modal = document.getElementById("myModal");
@@ -54,7 +67,7 @@ function displayMarkerLocation(level, randomNumber){
     document.getElementById('marker-location').innerHTML = locations[level].cities[randomNumber].city;
 }
 
-function nextTarget(mymap, level, targetMarker, distanceLine){
+function nextTarget(mymap, level, targetMarker){
     // remove Target MArker from map
     targetMarker.removeFrom(mymap);
     var randomNumber = Math.floor(Math.random() * locations[level].cities.length);
@@ -66,7 +79,7 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
 }
 
 function nextTargetComplete(mymap, level, targetMarker, distanceLine, animation){
-    nextTarget(mymap, level, targetMarker, distanceLine)
+    nextTarget(mymap, level, targetMarker)
     distanceLine.removeFrom(mymap);
     animation.cancel();
     animation.play();
@@ -88,6 +101,12 @@ function nextTargetComplete(mymap, level, targetMarker, distanceLine, animation)
     displayScore(score)
     displayCounter(counter)
   
+      // Before map is being initialized.
+    var mapsPlaceholder = [];
+
+    L.Map.addInitHook(function () {
+      mapsPlaceholder.push(this); // Use whatever global scope variable you like.
+    });
   
     var mymap = L.map('mapid').setView([0, 0], 2);
   
@@ -168,7 +187,7 @@ function nextTargetComplete(mymap, level, targetMarker, distanceLine, animation)
       mymap.flyTo(center, zoom);
 
 
-      //showModal(distance);
+      showModal(distance);
   
 
       score += calculateScore(distance);
@@ -196,7 +215,7 @@ function nextTargetComplete(mymap, level, targetMarker, distanceLine, animation)
     nextButton.addEventListener('click', function() {
       nextTargetComplete(mymap, level, targetMarker, distanceLine, animation);
         });
-  
+
   
     // Markers
 
