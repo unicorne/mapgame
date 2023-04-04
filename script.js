@@ -1,131 +1,196 @@
+function loadJSONP(url, callback) {
+  const script = document.createElement('script');
+  script.src = url;
+  script.async = true;
+  script.onload = callback;
+  document.body.appendChild(script);
+}
 
-function showModal(distance, mymap, level, targetMarker, distanceLine, animation) {
-  var modal = document.getElementById("myModal");
-  var distanceValue = document.getElementById("distance-value");
-  distanceValue.innerHTML = "Distance: " + distance + " meters";
-  modal.style.display = "block";
-  
-  var modalButton = document.getElementById("Next Target Modal");
-  
 
-  modalButton.addEventListener("click", closeModal); // add event listener to close modal
-  modalButton.addEventListener("click", nextTargetComplete); // add event listener to close modal
+loadJSONP('locations.js', function() {
+// ###############################################
+// #                                             #
+// #                Functions                    #
+// #                                             #
+// ###############################################
 
-  
-  var closeBtn = document.getElementsByClassName("close")[0];
-  closeBtn.onclick = function() {
-    modal.style.display = "none";
-  }
-  window.onclick = function(event) {
-    if (event.target == modal) {
+  function showModal(distance) {
+    var modal = document.getElementById("myModal");
+    var distanceValue = document.getElementById("distance-value");
+    distanceValue.innerHTML = "Distance: " + distance + " meters";
+    modal.style.display = "block";
+    
+    var modalButton = document.getElementById("Next Target Modal");
+    
+
+    modalButton.addEventListener("click", closeModal); // add event listener to close modal
+    modalButton.addEventListener("click", nextTargetComplete); // add event listener to close modal
+
+    
+    var closeBtn = document.getElementsByClassName("close")[0];
+    closeBtn.onclick = function() {
       modal.style.display = "none";
     }
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
   }
-}
 
-function closeModal() {
-  var modal = document.getElementById("myModal");
-  modal.style.display = "none";
-}
-
-
-function closeModal() {
-  var modal = document.getElementById("myModal");
-  modal.style.display = "none";
-}
-
-
-
-function loadJSONP(url, callback) {
-    const script = document.createElement('script');
-    script.src = url;
-    script.async = true;
-    script.onload = callback;
-    document.body.appendChild(script);
-  }
-  
-function calculateScore(distance) {
-    var maxDistance = 12000000;
-    var tmp_score = maxDistance/distance;
-    var score = Math.round(tmp_score);
-    return score;
-}
-
-function displayScore(score) {
-    document.getElementById('score-table').innerHTML = score; 
-}
-
-function displayLevel(level) {
-    document.getElementById('level-header').innerHTML = (level + 1).toString(); 
-}
-
-function displayCounter(counter) {
-    document.getElementById('counter').innerHTML = counter; 
-}
-
-function displayMarkerLocation(level, randomNumber){
-    document.getElementById('marker-location').innerHTML = locations[level].cities[randomNumber].city;
-}
-
-function nextTarget(mymap, level, targetMarker){
-    // remove Target MArker from map
-    targetMarker.removeFrom(mymap);
-    var randomNumber = Math.floor(Math.random() * locations[level].cities.length);
-    console.log(randomNumber);
-    displayMarkerLocation(level, randomNumber)
-    var lat = locations[level].cities[randomNumber].lat;
-    var lng = locations[level].cities[randomNumber].lng;
-    targetMarker.setLatLng([lat, lng]);
-}
-
-function nextTargetComplete(mymap, level, targetMarker, distanceLine, animation){
-    nextTarget(mymap, level, targetMarker)
-    distanceLine.removeFrom(mymap);
-    animation.cancel();
-    animation.play();
+  function closeModal() {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
   }
 
 
-  
-  // Map
-  
-  loadJSONP('locations.js', function() {
+  function closeModal() {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+  }
+
+    
+  function calculateScore(distance) {
+      var maxDistance = 12000000;
+      var tmp_score = maxDistance/distance;
+      var score = Math.round(tmp_score);
+      return score;
+  }
+
+  function displayScore(score) {
+      document.getElementById('score-table').innerHTML = score; 
+  }
+
+  function displayLevel(level) {
+      document.getElementById('level-header').innerHTML = (level + 1).toString(); 
+  }
+
+  function displayCounter(counter) {
+      document.getElementById('counter').innerHTML = counter; 
+  }
+
+  function displayMarkerLocation(level, randomNumber){
+      document.getElementById('marker-location').innerHTML = locations[level].cities[randomNumber].city;
+  }
+
+  function nextTarget(){
+      // remove Target MArker from map
+      targetMarker.removeFrom(mymap);
+      var randomNumber = Math.floor(Math.random() * locations[level].cities.length);
+      console.log(randomNumber);
+      displayMarkerLocation(level, randomNumber)
+      var lat = locations[level].cities[randomNumber].lat;
+      var lng = locations[level].cities[randomNumber].lng;
+      targetMarker.setLatLng([lat, lng]);
+  }
+
+  function nextTargetComplete(){
+      nextTarget(mymap, level, targetMarker)
+      distanceLine.removeFrom(mymap);
+      mymap.setView([0,0], 2);
+      animation.cancel();
+      animation.play();
+    }
 
 
+
   
-    var maximumlevel = locations.length;
-    var level = 0;
-    var score = 0;
-    var counter = 0;
-    displayLevel(level)
+
+  function calculateDistance(){
+    animation.pause();
+    targetMarker.addTo(mymap);
+    var targetLatLng = targetMarker.getLatLng();
+    var draggableLatLng = draggableMarker.getLatLng();
+    var distance = targetLatLng.distanceTo(draggableLatLng).toFixed(2);
+
+    // calculate the center of the two markers
+    var latLngs = [targetLatLng, draggableLatLng];
+    var center = L.latLngBounds(latLngs).getCenter();
+
+    // calculate the appropriate zoom level based on the distance between the markers
+    var zoom = mymap.getBoundsZoom(L.latLngBounds(latLngs).pad(0.5), false);
+    console.log(zoom);
+    var zoom_time = zoom*300;
+    var zoom_time_modal = zoom*300 + 500;
+
+
+    // set the map view to the center of the markers with the appropriate zoom level
+    mymap.flyTo(center, zoom);
+    setTimeout(function(){
+      distanceLine = L.polyline([targetLatLng, draggableLatLng], {color: 'red'});
+      distanceLine.addTo(mymap);
+    }, zoom_time);
+    setTimeout(function(){
+      showModal(distance);
+    }, zoom_time_modal);
+
+    
+      
+    return distance;
+  }
+
+  function completeGuess(){
+    distance = calculateDistance();
+    setTimeout(function(){
+      updateGameState(distance);
+      nextTargetComplete();
+      closeModal();
+    }, 5000);
+  };
+
+  function updateGameState(distance){
+    score += calculateScore(distance);
     displayScore(score)
+
+    counter += 1;
     displayCounter(counter)
-  
-      // Before map is being initialized.
-    var mapsPlaceholder = [];
+    
 
-    L.Map.addInitHook(function () {
-      mapsPlaceholder.push(this); // Use whatever global scope variable you like.
-    });
-  
-    var mymap = L.map('mapid').setView([0, 0], 2);
-  
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-      maxZoom: 14,
-      id: 'mapbox.streets'
-    }).addTo(mymap);
-  
-    var targetMarker = L.marker([45.5231, -122.6765])
-  
-    var draggableMarker = L.marker([0, 0], {
-      draggable: true,
-      autoPan: true
-    }).addTo(mymap);
-  
-    var distanceLine = null;
+    if (level == maximumlevel) {
+      alert('You have reached the maximum level. Your score is ' + score);
+    }
 
-    nextTarget(mymap, level, targetMarker, distanceLine);
+    if (counter == 5) {
+      level += 1;
+      displayLevel(level)
+      counter = 0;
+      displayCounter(counter)
+    }
+  };
+
+
+  // ###############################################
+  // #                                             #
+  // #                Functions                    #
+  // #                                             #
+  // ###############################################
+
+  var maximumlevel = locations.length;
+  var level = 0;
+  var score = 0;
+  var counter = 0;
+  displayLevel(level)
+  displayScore(score)
+  displayCounter(counter)
+
+  var mymap = L.map('mapid').setView([0, 0], 2);
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+    maxZoom: 14,
+    id: 'mapbox.streets'
+  }).addTo(mymap);
+
+  var targetMarker = L.marker([45.5231, -122.6765])
+
+  var draggableMarker = L.marker([0, 0], {
+    draggable: true,
+    autoPan: true
+  }).addTo(mymap);
+
+  var distanceLine = null;
+
+  nextTarget(mymap, level, targetMarker, distanceLine);
 
   // Set the duration of the countdown in seconds
   const duration = 10;
@@ -157,6 +222,10 @@ function nextTargetComplete(mymap, level, targetMarker, distanceLine, animation)
     updateColor(animation.currentTime / 1000);
   });
 
+  animation.addEventListener('finish', () => {
+    completeGuess();
+  });
+
 
 
   
@@ -165,48 +234,10 @@ function nextTargetComplete(mymap, level, targetMarker, distanceLine, animation)
     var calculateButton = document.getElementById('calculate-distance');
     calculateButton.addEventListener('click', function() {
 
-      animation.pause();
-      targetMarker.addTo(mymap);
-      var targetLatLng = targetMarker.getLatLng();
-      var draggableLatLng = draggableMarker.getLatLng();
-      var distance = targetLatLng.distanceTo(draggableLatLng).toFixed(2);
-      if (distanceLine) {
-        distanceLine.removeFrom(mymap);
-      }
-      distanceLine = L.polyline([targetLatLng, draggableLatLng], {color: 'red'});
-      distanceLine.addTo(mymap);
-
-      // calculate the center of the two markers
-      var latLngs = [targetLatLng, draggableLatLng];
-      var center = L.latLngBounds(latLngs).getCenter();
-
-      // calculate the appropriate zoom level based on the distance between the markers
-      var zoom = mymap.getBoundsZoom(L.latLngBounds(latLngs).pad(0.5), false);
-
-      // set the map view to the center of the markers with the appropriate zoom level
-      mymap.flyTo(center, zoom);
-
-
-      showModal(distance);
+      distance = calculateDistance();
   
 
-      score += calculateScore(distance);
-      displayScore(score)
-
-      counter += 1;
-      displayCounter(counter)
-      
-  
-      if (level == maximumlevel) {
-        alert('You have reached the maximum level. Your score is ' + score);
-      }
-  
-      if (counter == 5) {
-        level += 1;
-        displayLevel(level)
-        counter = 0;
-        displayCounter(counter)
-      }
+      updateGameState(distance);
 
     });
 
