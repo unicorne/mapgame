@@ -1,4 +1,20 @@
 
+function showModal(distance) {
+  var modal = document.getElementById("myModal");
+  var distanceValue = document.getElementById("distance-value");
+  distanceValue.innerHTML = "Distance: " + distance + " meters";
+  modal.style.display = "block";
+  var closeBtn = document.getElementsByClassName("close")[0];
+  closeBtn.onclick = function() {
+    modal.style.display = "none";
+  }
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+}
+
 
 
 function loadJSONP(url, callback) {
@@ -129,7 +145,10 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
       }
       distanceLine = L.polyline([targetLatLng, draggableLatLng], {color: 'red'});
       distanceLine.addTo(mymap);
-      alert('The distance between the markers is ' + distance + ' meters.');
+      //alert('The distance between the markers is ' + distance + ' meters.');
+      //makePopup(distance);
+      window.confirm('The distance between the markers is ' + distance + ' meters. \n Click OK to continue.');
+      //showModal(distance);
   
       score += calculateScore(distance);
       displayScore(score)
