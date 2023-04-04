@@ -64,6 +64,15 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
     var lng = locations[level].cities[randomNumber].lng;
     targetMarker.setLatLng([lat, lng]);
 }
+
+function nextTargetComplete(mymap, level, targetMarker, distanceLine, animation){
+    nextTarget(mymap, level, targetMarker, distanceLine)
+    distanceLine.removeFrom(mymap);
+    animation.cancel();
+    animation.play();
+  }
+
+
   
   // Map
   
@@ -138,11 +147,7 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
     calculateButton.addEventListener('click', function() {
 
       animation.pause();
-
       targetMarker.addTo(mymap);
-
-      counter += 1;
-      displayCounter(counter)
       var targetLatLng = targetMarker.getLatLng();
       var draggableLatLng = draggableMarker.getLatLng();
       var distance = targetLatLng.distanceTo(draggableLatLng).toFixed(2);
@@ -151,15 +156,26 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
       }
       distanceLine = L.polyline([targetLatLng, draggableLatLng], {color: 'red'});
       distanceLine.addTo(mymap);
-      //alert('The distance between the markers is ' + distance + ' meters.');
-      //makePopup(distance);
-      //window.confirm('The distance between the markers is ' + distance + ' meters. \n Click OK to continue.');
-      showModal(distance);
+
+      // calculate the center of the two markers
+      var latLngs = [targetLatLng, draggableLatLng];
+      var center = L.latLngBounds(latLngs).getCenter();
+
+      // calculate the appropriate zoom level based on the distance between the markers
+      var zoom = mymap.getBoundsZoom(L.latLngBounds(latLngs).pad(0.5), false);
+
+      // set the map view to the center of the markers with the appropriate zoom level
+      mymap.flyTo(center, zoom);
+
+
+      //showModal(distance);
   
+
       score += calculateScore(distance);
       displayScore(score)
 
-      console.log(distanceLine)
+      counter += 1;
+      displayCounter(counter)
       
   
       if (level == maximumlevel) {
@@ -178,10 +194,7 @@ function nextTarget(mymap, level, targetMarker, distanceLine){
     var nextButton = document.getElementById('Next Target');
     nextButton.addEventListener("click", closeModal);
     nextButton.addEventListener('click', function() {
-      nextTarget(mymap, level, targetMarker, distanceLine);
-      distanceLine.removeFrom(mymap);
-      animation.cancel();
-      animation.play();
+      nextTargetComplete(mymap, level, targetMarker, distanceLine, animation);
         });
   
   
